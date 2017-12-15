@@ -83,9 +83,9 @@ int main(int argc, char* argv[])
             //sourceID = latterId;
             //destID = formerId;
 
-            //for URL-GCY ID(from 0 to MAX-1: 20w)
-            sourceID = formerId;
-            destID = latterId;
+            //for URL-GCY ID(from 1 to MAX: 20w)
+            sourceID = formerId - 1;
+            destID = latterId - 1;
 
             LinkOutNum[sourceID]++;
             LinkInNum[destID]++;
