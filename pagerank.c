@@ -57,24 +57,27 @@ int main(int argc, char* argv[])
 	while(!feof(url))
     {
         fgets(row, 100, url);
-        if(*row == 'h' | *row == 'n') // Read the respective ID of a Web Page
+        if (*row == '\n')
         {
-
-            for (space = 0; row[space] != ' ' ; ++space){;}
-            if ((URLs[n] = malloc(space)) == NULL)
+            continue;
+        }
+        for (space = 0; row[space] != ' ' ; ++space);
+        if(row[space+1] == 'h' | row[space+1] == 'n') // Read the respective ID of a Web Page
+        {
+            for (end = space; row[end] != '\n' ; ++end);
+            if ((URLs[n] = malloc(end - space - 1)) == NULL)
                     return -1;
-            memset(URLs[n], 0, space);
-            strncpy(URLs[n], row, space);
+            memset(URLs[n], 0, end - space - 1);
+            strncpy(URLs[n], row + space + 1, end - space - 1);
             n++;
             URLNUM++;
             //continue;
         }
-        if(*row != 'h' && *row != 'n' && *row != '\n')  // Read Link Relationship: Source(int)->Destination(int)
+        if(row[space+1] != 'h' && row[space+1] != 'n' && row[space+1] != '\n')  // Read Link Relationship: Source(int)->Destination(int)
         {
             memset(strSourceID, 0, 10);
             memset(strDestID, 0, 10);
-            for (space = 0; row[space] != ' ' ; ++space);
-                strncpy(strSourceID, row, space);
+            strncpy(strSourceID, row, space);
             formerId = atoi(strSourceID);
             for (end = space; row[end] != '\n' ; ++end);
                 strncpy(strDestID, row+space+1, end-space-1);
@@ -83,9 +86,9 @@ int main(int argc, char* argv[])
             //sourceID = latterId;
             //destID = formerId;
 
-            //for URL-GCY ID(from 1 to MAX: 20w)
-            sourceID = formerId - 1;
-            destID = latterId - 1;
+            //for URL-GCY ID(from 0 to MAX-1: 20w)
+            sourceID = formerId;
+            destID = latterId;
 
             LinkOutNum[sourceID]++;
             LinkInNum[destID]++;
